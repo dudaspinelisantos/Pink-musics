@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Playlists — PinkTunes{% endblock %}
+{% block content %}
+<section class="page-heading"><div><span class="eyebrow">CADA MOMENTO TEM UM SOM</span><h1>Suas playlists</h1><p class="muted">Crie coleções para qualquer humor, fase ou ocasião.</p></div></section>
+<div class="content-columns playlist-columns">
+  <section class="panel"><h2>＋ Nova playlist</h2><form method="post" class="stack-form"><label for="name">Nome *</label><input id="name" name="name" required maxlength="100" placeholder="Ex.: domingo tranquilo"><label for="description">Descrição</label><textarea id="description" name="description" rows="3" maxlength="300" placeholder="Qual é a vibe desta playlist?"></textarea><button class="btn primary full" type="submit">Criar playlist</button></form><hr class="soft-line"><h2>Suas coleções</h2>{% if playlists %}<div class="playlist-menu">{% for p in playlists %}<a class="playlist-menu-item {% if selected and selected.id == p.id %}active{% endif %}" href="{{ url_for('playlists', id=p.id) }}"><span class="playlist-tiny">♫</span><span><b>{{ p.name }}</b><small>{{ p.song_count }} música(s)</small></span><span>→</span></a>{% endfor %}</div>{% else %}<p class="muted">Suas playlists aparecerão aqui.</p>{% endif %}</section>
+  <section class="panel playlist-detail">
+  {% if selected %}
+    <div class="detail-title"><div class="playlist-art large-art">♫</div><div><span class="eyebrow">SUA PLAYLIST</span><h2>{{ selected.name }}</h2><p class="muted">{{ selected.description or 'Uma coleção feita por você.' }}</p></div></div>
+    <form method="post" action="{{ url_for('excluir_playlist', playlist_id=selected.id) }}" data-confirm="Excluir esta playlist? As músicas continuarão na biblioteca."><button class="btn danger-outline small" type="submit">Excluir playlist</button></form>
+    <hr class="soft-line"><h3>Adicionar música</h3>
+    {% if songs %}<form method="post" action="{{ url_for('adicionar_playlist', playlist_id=selected.id) }}" class="add-to-playlist"><select name="song_id" required aria-label="Escolha uma música">{% for s in songs %}<option value="{{ s.id }}">{{ s.title }} — {{ s.artist }}</option>{% endfor %}</select><button class="btn primary" type="submit">Adicionar</button></form>{% else %}<p class="muted">Adicione músicas à biblioteca antes de incluí-las na playlist.</p>{% endif %}
+    <h3 class="spaced-heading">Músicas nesta playlist</h3>
+    {% if selected_songs %}<div class="table-list">{% for s in selected_songs %}<article class="library-song"><div class="mini-cover">♫</div><div class="library-song-main"><b>{{ s.title }}</b><small>{{ s.artist }}</small></div><form method="post" action="{{ url_for('remover_playlist', playlist_id=selected.id, song_id=s.id) }}"><button class="icon-button danger" title="Remover da playlist" aria-label="Remover {{ s.title }}">×</button></form></article>{% endfor %}</div>{% else %}<div class="empty-state small-empty"><span>♫</span><h3>Playlist esperando música</h3><p>Escolha uma música acima para começar.</p></div>{% endif %}
+  {% else %}
+    <div class="empty-state"><span>▤</span><h3>Escolha uma playlist</h3><p>Selecione uma coleção à esquerda ou crie uma nova.</p></div>
+  {% endif %}
+  </section>
+</div>
+{% endblock %}

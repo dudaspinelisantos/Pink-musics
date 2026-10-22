@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}Artistas — PinkTunes{% endblock %}
+{% block content %}
+<section class="page-heading"><div><span class="eyebrow">QUEM FAZ A SUA TRILHA</span><h1>Artistas salvos</h1><p class="muted">Acompanhe os artistas que você não quer perder de vista.</p></div></section>
+<div class="content-columns artist-columns">
+  <section class="panel"><h2>＋ Salvar artista</h2><form method="post" class="stack-form"><label for="artist">Nome do artista</label><input id="artist" name="artist" required maxlength="160" placeholder="Ex.: Taylor Swift"><button class="btn primary full" type="submit">Salvar artista</button></form><p class="muted small-text">Você também pode salvar o nome de um artista mesmo antes de cadastrar suas músicas.</p></section>
+  <section class="artist-grid-wrap"><h2>Sua lista</h2>{% if artists %}<div class="artist-grid">{% for artist in artists %}<article class="artist-card"><div class="artist-avatar">{{ artist.artist[:1]|upper }}</div><div class="artist-card-info"><b>{{ artist.artist }}</b><small>{{ artist.song_count }} música(s) na biblioteca</small></div><form method="post" action="{{ url_for('excluir_artista', artist_id=artist.id) }}" data-confirm="Remover este artista da lista?"><button class="icon-button danger" title="Remover artista" aria-label="Remover {{ artist.artist }}">×</button></form></article>{% endfor %}</div>{% else %}<div class="empty-state small-empty"><span>✧</span><h3>Nenhum artista salvo ainda</h3><p>Adicione nomes para manter seus artistas por perto.</p></div>{% endif %}
+  <div class="panel artist-matches"><h2>Músicas por artista salvo</h2>{% set found = namespace(any=false) %}{% for artist in artists %}{% for song in songs %}{% if song.artist|lower == artist.artist|lower %}{% set found.any = true %}<div class="simple-row"><span>♫</span><div><b>{{ song.title }}</b><small>{{ song.artist }}</small></div></div>{% endif %}{% endfor %}{% endfor %}{% if not found.any %}<p class="muted">Quando você cadastrar músicas desses artistas na biblioteca, elas aparecerão aqui.</p>{% endif %}</div>
+  </section>
+</div>
+{% endblock %}

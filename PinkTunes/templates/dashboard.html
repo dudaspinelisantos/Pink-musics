@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Início — PinkTunes{% endblock %}
+{% block content %}
+<section class="welcome-row">
+  <div><span class="eyebrow">SEU ESPAÇO MUSICAL</span><h1>Oi, {{ session.get('user_name', 'music lover') }} <span class="wave">✦</span></h1><p class="muted">O que vamos ouvir, guardar ou descobrir hoje?</p></div>
+  <a class="btn primary" href="{{ url_for('biblioteca') }}">＋ Adicionar música</a>
+</section>
+<section class="stats-grid">
+  <div class="stat-card"><span class="stat-icon">♫</span><div><strong>{{ song_count }}</strong><small>músicas na biblioteca</small></div></div>
+  <div class="stat-card"><span class="stat-icon">♡</span><div><strong>{{ fav_count }}</strong><small>músicas favoritas</small></div></div>
+  <div class="stat-card"><span class="stat-icon">✧</span><div><strong>{{ artist_count }}</strong><small>artistas salvos</small></div></div>
+</section>
+<div class="section-heading"><div><span class="eyebrow">SUA COLEÇÃO</span><h2>Adicionadas recentemente</h2></div><a class="text-link" href="{{ url_for('biblioteca') }}">Ver biblioteca →</a></div>
+{% if songs %}<div class="song-grid">{% for song in songs %}<article class="song-card"><div class="song-cover">{{ song.title[:1]|upper }}<span>♫</span></div><div class="song-info"><b>{{ song.title }}</b><small>{{ song.artist }}</small>{% if song.genre %}<span class="tag">{{ song.genre }}</span>{% endif %}</div><form method="post" action="{{ url_for('favoritar', song_id=song.id) }}"><button class="icon-button" title="Adicionar/remover dos favoritos" aria-label="Favoritar {{ song.title }}">♡</button></form></article>{% endfor %}</div>{% else %}<div class="empty-state"><span>♫</span><h3>Sua trilha começa aqui</h3><p>Adicione algumas músicas para montar sua biblioteca.</p><a class="btn primary" href="{{ url_for('biblioteca') }}">Adicionar primeira música</a></div>{% endif %}
+<div class="section-heading"><div><span class="eyebrow">FEITAS POR VOCÊ</span><h2>Suas playlists</h2></div><a class="text-link" href="{{ url_for('playlists') }}">Ver todas →</a></div>
+{% if playlists %}<div class="playlist-grid">{% for p in playlists %}<a class="playlist-card" href="{{ url_for('playlists', id=p.id) }}"><div class="playlist-art">♫</div><div><b>{{ p.name }}</b><small>{{ p.song_count }} música(s)</small></div><span class="arrow">↗</span></a>{% endfor %}</div>{% else %}<div class="inline-empty">Ainda não há playlists. <a href="{{ url_for('playlists') }}">Crie a primeira →</a></div>{% endif %}
+<div class="section-heading"><div><span class="eyebrow">PARA VOCÊ</span><h2>Ideias para redescobrir</h2></div></div>
+{% if recs %}<div class="recommend-list">{% for song in recs %}<div class="recommend-item"><span class="recommend-note">♫</span><div><b>{{ song.title }}</b><small>{{ song.artist }}{% if song.genre %} · {{ song.genre }}{% endif %}</small></div><form method="post" action="{{ url_for('favoritar', song_id=song.id) }}"><button class="btn small secondary" type="submit">♡ Favoritar</button></form></div>{% endfor %}</div>{% else %}<div class="hint-box"><span>✧</span><p>Suas sugestões vão aparecer conforme você organizar músicas em playlists. Adicione gêneros para ajudar a encontrar afinidades.</p></div>{% endif %}
+{% endblock %}
