@@ -1,6 +1,0 @@
-{% extends "base.html" %}
-{% block title %}Favoritos — PinkTunes{% endblock %}
-{% block content %}
-<section class="page-heading"><div><span class="eyebrow">AS QUE MORAM NO CORAÇÃO</span><h1>Seus favoritos ♡</h1><p class="muted">Músicas que você quer encontrar rapidinho.</p></div></section>
-{% if songs %}<div class="table-list wide-list">{% for song in songs %}<article class="library-song"><div class="mini-cover favorite-cover">♡</div><div class="library-song-main"><b>{{ song.title }}</b><small>{{ song.artist }}{% if song.album %} · {{ song.album }}{% endif %}</small><div class="song-meta">{% if song.genre %}<span class="tag">{{ song.genre }}</span>{% endif %}{% if song.link %}<a href="{{ song.link }}" target="_blank" rel="noopener noreferrer">Abrir música ↗</a>{% endif %}</div></div><form method="post" action="{{ url_for('favoritar', song_id=song.id) }}"><button class="icon-button active-heart" title="Remover dos favoritos" aria-label="Remover {{ song.title }} dos favoritos">♥</button></form></article>{% endfor %}</div>{% else %}<div class="empty-state"><span>♡</span><h3>Seus favoritos começam com um clique</h3><p>Vá à biblioteca e toque no coração ao lado das músicas que você ama.</p><a class="btn primary" href="{{ url_for('biblioteca') }}">Ir para biblioteca</a></div>{% endif %}
-{% endblock %}
